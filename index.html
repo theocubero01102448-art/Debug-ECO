@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoStore ♻️</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            leaf: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            earth: {
+              100: '#f5f5f0',
+              200: '#e8e6df',
+              800: '#5c5a52',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .eco-pattern {
+      background-image: radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(22, 163, 74, 0.06) 0%, transparent 50%);
+    }
+    section { display: none; }
+    section.active { display: block; }
+  </style>
+</head>
+<body class="bg-earth-100 text-earth-800 eco-pattern min-h-screen font-sans">
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur-sm sticky top-0 z-50 border-b border-leaf-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <button onclick="showHome()" class="flex items-center gap-2 hover:scale-105 transition-transform">
+        <span class="text-3xl">♻️</span>
+        <h1 class="text-2xl font-bold text-leaf-800 tracking-tight">EcoStore</h1>
+      </button>
+      <button onclick="showCart()" class="relative bg-leaf-100 hover:bg-leaf-200 text-leaf-800 px-4 py-2 rounded-full font-medium transition-colors flex items-center gap-2">
+        <span>🛒</span>
+        <span>Carrinho</span>
+        <span id="cart-count" class="absolute -top-2 -right-2 bg-leaf-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Home Screen -->
+    <section id="home" class="active">
+      <div class="bg-gradient-to-br from-leaf-500 to-leaf-700 rounded-3xl p-8 md:p-12 text-white text-center mb-10 shadow-xl">
+        <h2 class="text-3xl md:text-5xl font-bold mb-4">Bem-vindo à EcoStore ♻️</h2>
+        <p class="text-lg md:text-xl opacity-95">Produtos sustentáveis para um mundo melhor 🌱</p>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-3 mb-8" id="category-filters">
+        <!-- Category buttons rendered by JS -->
+      </div>
+
+      <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Product cards rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Product Screen -->
+    <section id="product" class="max-w-3xl mx-auto">
+      <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-br from-leaf-100 to-leaf-200 p-10 flex justify-center items-center">
+          <span id="product-emoji" class="text-9xl drop-shadow-lg">🍶</span>
+        </div>
+        <div class="p-8">
+          <span id="product-category" class="inline-block bg-leaf-100 text-leaf-800 px-3 py-1 rounded-full text-sm font-semibold mb-3">Cozinha</span>
+          <h2 id="product-name" class="text-3xl font-bold text-leaf-900 mb-3">Garrafa Térmica de Aço 500ml</h2>
+          <p id="product-description" class="text-gray-600 mb-6 leading-relaxed">Descrição do produto.</p>
+          <p id="product-price" class="text-3xl font-bold text-leaf-600 mb-6">R$ 89,90</p>
+
+          <div class="flex items-center gap-4 mb-8">
+            <span class="font-medium text-gray-700">Quantidade:</span>
+            <div class="flex items-center bg-earth-100 rounded-full overflow-hidden">
+              <button onclick="decreaseProductQuantity()" class="px-4 py-2 hover:bg-leaf-200 transition-colors text-leaf-800 font-bold text-lg">−</button>
+              <input id="product-quantity" type="number" min="1" value="1" class="w-16 text-center bg-transparent font-semibold outline-none" readonly>
+              <button onclick="increaseProductQuantity()" class="px-4 py-2 hover:bg-leaf-200 transition-colors text-leaf-800 font-bold text-lg">+</button>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button onclick="addToCartFromProduct()" class="flex-1 bg-leaf-600 hover:bg-leaf-700 text-white py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+              <span>🛒</span> Adicionar ao carrinho
+            </button>
+            <button onclick="showHome()" class="flex-1 bg-earth-200 hover:bg-earth-300 text-earth-800 py-3 rounded-xl font-semibold transition-colors">
+              Voltar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cart Screen -->
+    <section id="cart" class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold text-leaf-900 mb-6">Seu Carrinho 🛒</h2>
+      <div class="bg-white rounded-3xl shadow-lg p-6 mb-6">
+        <div id="cart-items">
+          <!-- Cart items rendered by JS -->
+        </div>
+        <div class="border-t border-leaf-200 pt-6 mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p class="text-2xl font-bold text-leaf-900">Total: <span id="cart-total" class="text-leaf-600">R$ 0,00</span></p>
+          <div class="flex gap-3 w-full sm:w-auto">
+            <button onclick="showHome()" class="flex-1 bg-earth-200 hover:bg-earth-300 text-earth-800 px-6 py-3 rounded-xl font-semibold transition-colors">
+              Continuar comprando
+            </button>
+            <button onclick="showCheckout()" class="flex-1 bg-leaf-600 hover:bg-leaf-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition-colors">
+              Finalizar compra
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Checkout Screen -->
+    <section id="checkout" class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold text-leaf-900 mb-6">Finalizar Compra 💳</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <form id="checkout-form" onsubmit="confirmOrder(event)" class="bg-white rounded-3xl shadow-lg p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Nome completo</label>
+            <input type="text" required class="w-full border border-leaf-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-leaf-400 bg-leaf-50/50">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">E-mail</label>
+            <input type="text" required class="w-full border border-leaf-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-leaf-400 bg-leaf-50/50">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Endereço</label>
+            <input type="text" required class="w-full border border-leaf-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-leaf-400 bg-leaf-50/50">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">Cidade</label>
+              <input type="text" required class="w-full border border-leaf-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-leaf-400 bg-leaf-50/50">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">CEP</label>
+              <input type="text" required class="w-full border border-leaf-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-leaf-400 bg-leaf-50/50">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">Forma de pagamento</label>
+            <select required class="w-full border border-leaf-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-leaf-400 bg-leaf-50/50">
+              <option value="Pix">Pix</option>
+              <option value="Cartão">Cartão</option>
+              <option value="Boleto">Boleto</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-leaf-600 hover:bg-leaf-700 text-white py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all mt-2">
+            Confirmar pedido
+          </button>
+        </form>
+
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-leaf-900 mb-4">Resumo do pedido</h3>
+          <div id="checkout-summary" class="space-y-3 mb-4 max-h-80 overflow-y-auto">
+            <!-- Order summary rendered by JS -->
+          </div>
+          <div class="border-t border-leaf-200 pt-4">
+            <p class="text-xl font-bold text-leaf-900">Total: <span id="checkout-total" class="text-leaf-600">R$ 0,00</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Checkout Success Screen -->
+    <section id="checkout-success" class="max-w-2xl mx-auto text-center">
+      <div class="bg-white rounded-3xl shadow-lg p-10">
+        <div class="text-7xl mb-6">🌍</div>
+        <h2 class="text-3xl font-bold text-leaf-900 mb-4">Pedido confirmado!</h2>
+        <p class="text-lg text-gray-600 mb-8">Obrigado por comprar com a EcoStore 🌍</p>
+        <button onclick="showHome()" class="bg-leaf-600 hover:bg-leaf-700 text-white px-8 py-3 rounded-xl font-semibold shadow-md transition-colors">
+          Voltar à loja
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-leaf-200 mt-12 py-6">
+    <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+      EcoStore ♻️ — Produtos sustentáveis para um mundo melhor 🌱
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
